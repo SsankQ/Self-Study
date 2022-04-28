@@ -6,6 +6,10 @@ function solution(absolutes, signs) {
         signs[i] ? result += absolutes[i] : result -= absolutes[i];
     }
     return result;
+
+    // return absolutes.reduce((acc, cur, idx) => {
+    //     return acc + cur * (signs[idx] ? 1 : -1);
+    // }, 0)
 }
 
 let output = solution([4, 7, 12], [true, false, true]);
