@@ -1,39 +1,42 @@
-const messageList = document.querySelector("ul");
-const messageForm = document.querySelector("#message");
-const nickForm = document.querySelector("#nick");
-const socket = new WebSocket(`ws://${window.location.host}`);
+const socket = io();
 
-const makeMessage = (type, payload) => {
-  const msg = { type, payload };
-  return JSON.stringify(msg);
-};
+// const messageList = document.querySelector("ul");
+// const messageForm = document.querySelector("#message");
+// const nickForm = document.querySelector("#nick");
+// // 브라우저 WebSocket은 Socket.io와 호환되지 않음
+// const socket = new WebSocket(`ws://${window.location.host}`);
 
-socket.addEventListener("open", () => {
-  console.log("Connected to Server ✅");
-});
+// const makeMessage = (type, payload) => {
+//   const msg = { type, payload };
+//   return JSON.stringify(msg);
+// };
 
-socket.addEventListener("message", (message) => {
-  const li = document.createElement("li");
-  li.innerText = message.data;
-  messageList.append(li);
-});
+// socket.addEventListener("open", () => {
+//   console.log("Connected to Server ✅");
+// });
 
-socket.addEventListener("close", () => {
-  console.log("Disconnected from server ❌");
-});
+// socket.addEventListener("message", (message) => {
+//   const li = document.createElement("li");
+//   li.innerText = message.data;
+//   messageList.append(li);
+// });
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const input = messageForm.querySelector("input");
-  socket.send(makeMessage("new_msg", input.value));
-  input.value = "";
-};
+// socket.addEventListener("close", () => {
+//   console.log("Disconnected from server ❌");
+// });
 
-const handleNickSubmit = (e) => {
-  e.preventDefault();
-  const input = nickForm.querySelector("input");
-  socket.send(makeMessage("nickname", input.value));
-};
+// const handleSubmit = (e) => {
+//   e.preventDefault();
+//   const input = messageForm.querySelector("input");
+//   socket.send(makeMessage("new_msg", input.value));
+//   input.value = "";
+// };
 
-messageForm.addEventListener("submit", handleSubmit);
-nickForm.addEventListener("submit", handleNickSubmit);
+// const handleNickSubmit = (e) => {
+//   e.preventDefault();
+//   const input = nickForm.querySelector("input");
+//   socket.send(makeMessage("nickname", input.value));
+// };
+
+// messageForm.addEventListener("submit", handleSubmit);
+// nickForm.addEventListener("submit", handleNickSubmit);
