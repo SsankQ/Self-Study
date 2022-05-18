@@ -1,5 +1,20 @@
 const socket = io();
 
+const welcome = document.getElementById("welcome");
+const form = welcome.querySelector("form");
+
+function handleRoomSubmit(e) {
+  e.preventDefault();
+  const input = form.querySelector("input");
+  socket.emit("enter_room", { payload: input.value }, () => {
+    console.log("Server is done!");
+  });
+  input.value = "";
+}
+
+form.addEventListener("submit", handleRoomSubmit);
+
+//* ~ #1.9
 // const messageList = document.querySelector("ul");
 // const messageForm = document.querySelector("#message");
 // const nickForm = document.querySelector("#nick");
