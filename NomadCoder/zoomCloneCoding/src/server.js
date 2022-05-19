@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import WebSocket from "ws";
+// import WebSocket from "ws";
 import SocketIO from "socket.io";
 
 const app = express();
@@ -19,22 +19,41 @@ const httpServer = http.createServer(app); // http 서버
 // http://localhost:3000/socket.io/socket.io.js
 const wsServer = SocketIO(httpServer);
 
+const getPublicRooms = () => {
+  const { sids, rooms } = wsServer.sockets.adapter;
+  const publicRooms = [];
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      publicRooms.push(key);
+    }
+  });
+  return publicRooms;
+};
+
 wsServer.on("connection", (socket) => {
+  socket["nickname"] = "Anonymous";
   socket.onAny((e) => {
     console.log(`Socket Event: ${e}`);
   });
   socket.on("enter_room", (roomName, done) => {
     socket.join(roomName);
     done();
-    socket.to(roomName).emit("welcome"); // custom event
+    socket.to(roomName).emit("welcome", socket.nickname); // custom event
+    wsServer.sockets.emit("room_change", getPublicRooms());
   });
   socket.on("disconnecting", () => {
-    socket.rooms.forEach((room) => socket.to(room).emit("bye"));
+    socket.rooms.forEach((room) =>
+      socket.to(room).emit("bye", socket.nickname)
+    );
+  });
+  socket.on("disconnect", () => {
+    wsServer.sockets.emit("room_change", getPublicRooms());
   });
   socket.on("new_message", (msg, room, done) => {
-    socket.to(room).emit("new_message", msg);
+    socket.to(room).emit("new_message", `${socket.nickname}: ${msg}`);
     done();
   });
+  socket.on("nickname", (nickname) => (socket["nickname"] = nickname));
 });
 
 //* WebSocket
