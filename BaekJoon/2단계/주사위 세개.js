@@ -2,7 +2,7 @@ const input = require("fs")
   .readFileSync("/dev/stdin")
   .toString()
   .split(" ")
-  .map((value) => +value);
+  .map((el) => Number(el));
 
 input.sort(function (a, b) {
   return b - a;
