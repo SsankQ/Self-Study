@@ -8,7 +8,7 @@ const input = require("fs")
 
 //! 시간초과
 
-// const [num1, cards, num2, list] = input;
+const [num1, cards, num2, list] = input;
 // const cardList = cards.split(" ");
 // const listOfNums = list.split(" ");
 
@@ -23,3 +23,13 @@ const input = require("fs")
 // }
 
 // console.log(result.join(" "));
+
+const cardList = new Set(cards.split(" "));
+const listOfNums = list.split(" ");
+
+let result = [];
+for (const number of listOfNums) {
+  cardList.has(number) ? result.push(1) : result.push(0);
+}
+
+console.log(result.join(" "));
